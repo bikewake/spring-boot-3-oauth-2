@@ -25,7 +25,7 @@
 
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
 <header>
     <nav class="navbar navbar-light bg-light ps-5">
         <span class="navbar-brand mb-0 h1">Hike Bike Wake Chat</span>
@@ -33,18 +33,25 @@
     </nav>
 </header>
 <main>
-
     <div class="container">
         <div id="load-stream" hx-sse="connect:/chat">
-            <div id="load-message" hx-sse="swap:message"></div>
+            <div id="load-message" hx-sse="swap:message" hx-swap="afterend"></div>
         </div>
-        <input id="message-input" name="message" type="text"/>
-        <button hx-post="/chat" hx-include="#message-input">Chat</button>
     </div>
-
 </main>
+<footer class="mt-auto">
+    <nav class="navbar navbar-light bg-light ps-5">
+        <span class="navbar-brand mb-0 h1"></span>
+        <span class="nav-item">
+            <input class="mr-sm-2" id="message-input" name="message" type="text"/>
 
-
+            <button type="button" id="message-button" name="message-button"
+                    class="btn btn-outline-success my-2 my-sm-0 btn-sm btn-block"
+                    hx-post="/chat"
+                    hx-include="#message-input">Chat</button>
+            </span>
+        <span class="navbar-brand mb-0 h1"></span>
+    </nav>
+</footer>
 </body>
-
 </html>
