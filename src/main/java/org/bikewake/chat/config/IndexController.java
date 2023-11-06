@@ -1,4 +1,4 @@
-package org.bikewake.messaging.security;
+package org.bikewake.chat.config;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;

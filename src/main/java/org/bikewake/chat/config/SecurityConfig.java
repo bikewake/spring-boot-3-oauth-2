@@ -1,4 +1,4 @@
-package org.bikewake.messaging.security;
+package org.bikewake.chat.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,14 +14,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        http
+        http .csrf( cs-> cs.disable())
                 .oauth2Client(Customizer.withDefaults())
                 .oauth2Login(Customizer.withDefaults())
-//                .logout( lo -> lo.logoutSuccessUrl("https://buben.bikewake.org/realms/chat/protocol/openid-connect/logout?redirect_uri=http://localhost:8080/"))
+                .logout( lo -> lo.logoutSuccessUrl("https://buben.bikewake.org/realms/chat/protocol/openid-connect/logout"))
         ;
 
         http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/unauthenticated", "/oauth2/**", "/login/**").permitAll()
+                        .requestMatchers("/unauthenticated",  "/oauth2/**", "/login/**").permitAll()
                         .anyRequest().fullyAuthenticated()
                 );
 

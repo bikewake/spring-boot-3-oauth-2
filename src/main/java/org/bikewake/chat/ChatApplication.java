@@ -1,13 +1,13 @@
-package org.bikewake.messaging;
+package org.bikewake.chat;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MessagingApplication {
+public class ChatApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MessagingApplication.class, args);
+		SpringApplication.run(ChatApplication.class, args);
 	}
 
 }
