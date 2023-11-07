@@ -21,7 +21,7 @@ public class SecurityConfig {
         ;
 
         http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/unauthenticated",  "/oauth2/**", "/login/**").permitAll()
+                        .requestMatchers( "/oauth2/**", "/login/**").permitAll()
                         .anyRequest().fullyAuthenticated()
                 );
 

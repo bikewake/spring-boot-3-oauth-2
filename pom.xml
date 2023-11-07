@@ -61,11 +61,6 @@
 			<artifactId>bootstrap</artifactId>
 			<version>5.3.2</version>
 		</dependency>
-		<dependency>
-			<groupId>org.webjars.npm</groupId>
-			<artifactId>popperjs__core</artifactId>
-			<version>2.11.8</version>
-		</dependency>
 
 		<dependency>
 			<groupId>com.h2database</groupId>

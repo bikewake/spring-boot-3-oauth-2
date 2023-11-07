@@ -2,6 +2,8 @@ package org.bikewake.chat.controler;
 
 import org.bikewake.chat.model.ChatMessage;
 import org.bikewake.chat.model.PostMessage;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,5 +42,14 @@ public class ChatController {
         userMessage.setTimeStamp(new Date());
 
         chatSink.tryEmitNext(userMessage);
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void firstChatMessageAfterStartup() {
+        ChatMessage systemMessage = new ChatMessage();
+        systemMessage.setSender("System");
+        systemMessage.setMessage("Chat Started");
+        systemMessage.setTimeStamp(new Date());
+        chatSink.tryEmitNext(systemMessage);
     }
 }
