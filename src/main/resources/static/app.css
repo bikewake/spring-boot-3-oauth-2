@@ -1,0 +1,30 @@
+ul#chatMessages {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 240px;
+}
+
+li.message {
+    background-color: #ECEFF1;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+span.sender {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+small.timestamp {
+    font-size: 9px;
+    color: #888;
+    display: block;
+    text-align: right;
+}
+.message-cotainer{
+    position: fixed;
+    bottom: 0px;
+    background: white;
+    width: 100%;
+}
