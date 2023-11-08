@@ -1,7 +1,7 @@
 ul#chatMessages {
     list-style: none;
     padding: 0;
-    margin-bottom: 240px;
+    margin-bottom: 40px;
 }
 
 li.message {

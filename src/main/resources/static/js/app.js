@@ -9,6 +9,7 @@ $(document).ready(function () {
 
     const eventSource = new EventSource('/chat');
     eventSource.onmessage = function (event) {
+        console.log("event is in");
         if (event.data) {
             const data = JSON.parse(event.data);
             const dateString = new Date(data.timeStamp).toString();
