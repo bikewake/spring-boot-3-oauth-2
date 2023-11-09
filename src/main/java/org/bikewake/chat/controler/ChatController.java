@@ -20,8 +20,9 @@ import reactor.core.publisher.Sinks;
 @RestController
 public class ChatController {
 
-    private final static String USER_NAME_ATTRIBUTE = "email";
-    private final static Long NUMBER_OF_DATABASE_RECORDS = 5L;
+    private final static String USER_NAME_ATTRIBUTE = "name";
+    private final static String USER_EMAIL_ATTRIBUTE = "email";
+    private final static Long NUMBER_OF_DATABASE_RECORDS = 42L;
     private final ChatRepository chatRepository;
     private final Sinks.Many<ChatMessage> chatSink;
 
@@ -65,8 +66,8 @@ public class ChatController {
     public void onSuccess(AuthenticationSuccessEvent success) {
 
         ChatMessage systemMessage = new ChatMessage();
-        systemMessage.setSender("User Logged In");
-        systemMessage.setMessage(((OAuth2User) success.getAuthentication().getPrincipal()).getAttribute(USER_NAME_ATTRIBUTE));
+        systemMessage.setSender(((OAuth2User) success.getAuthentication().getPrincipal()).getAttribute(USER_NAME_ATTRIBUTE));
+        systemMessage.setMessage(((OAuth2User) success.getAuthentication().getPrincipal()).getAttribute(USER_EMAIL_ATTRIBUTE));
         systemMessage.setTimeStamp(System.currentTimeMillis());
         chatSink.tryEmitNext(systemMessage);
         checkDeleteRecords();

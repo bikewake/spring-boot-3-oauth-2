@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  chat:
+    image: bikewake/chat-bikewake:0.0.1
+    restart: unless-stopped
+    hostname: "chat"
+    container_name: chat
+    volumes:
+      - ./config:/app/config
+    environment:
+      - "PORT=9090"
+    ports:
+      - "9090:9090"
+
+
