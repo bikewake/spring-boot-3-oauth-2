@@ -42,6 +42,9 @@
         <span class="nav-item">
             <form id="chatForm" class="mb-3">
                 <input class="mr-sm-2" id="message" name="message" type="text"/>
+                <input type="hidden"
+                       name="${_csrf.parameterName}"
+                       value="${_csrf.token}"/>
                 <button type="submit" id="message-button" name="message-button"
                     class="btn btn-outline-success my-2 my-sm-0 btn-sm btn-block">Chat</button>
             </form>
