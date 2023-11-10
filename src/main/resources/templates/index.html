@@ -6,8 +6,8 @@
     <title>Hike Bike Wake Chat</title>
     <meta name="description" content="Hike Bike Wake Chat"/>
     <meta name="viewport" content="width=device-width"/>
-    <meta name="_csrf" content="${_csrf.token}"/>
-    <meta name="_csrf_header" content="${_csrf.headerName}"/>
+    <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+    <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
     <base href="/"/>
     <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/dist/css/bootstrap.min.css"/>
     <link th:href="@{/styles/app.css}" rel="stylesheet" type="text/css"  />
