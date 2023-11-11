@@ -73,7 +73,7 @@ public class ChatController {
         chatRepository.save(systemMessage).subscribe();
     }
 
-    @Scheduled(fixedRate = 40000)
+    @Scheduled(fixedRateString ="${chat.keep.alive}", initialDelay=10000)
     public void periodicalSystemKeepAliveMessage() {
         ChatMessage systemMessage = new ChatMessage();
         systemMessage.setSender("System");
