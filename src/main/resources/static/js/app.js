@@ -21,8 +21,10 @@ $(document).ready(function () {
         if (event.data) {
             const data = JSON.parse(event.data);
             const dateString = new Date(data.timeStamp).toString();
-            const message = `<li class="message"><span class="sender">${data.sender}:</span>${data.message}<small class="timestamp">${dateString}</small></li>`;
-            $('#chatMessages').append(message + '');
+            if(data.message.trim()) {
+                const message = `<li class="message"><span class="sender">${data.sender}:</span>${data.message}<small class="timestamp">${dateString}</small></li>`;
+                $('#chatMessages').append(message + '');
+            }
         }
     };
 

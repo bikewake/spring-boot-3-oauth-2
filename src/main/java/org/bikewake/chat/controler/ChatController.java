@@ -7,6 +7,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerSentEvent;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -48,7 +49,6 @@ public class ChatController {
         userMessage.setTimeStamp(System.currentTimeMillis());
 
         chatSink.tryEmitNext(userMessage);
-
         chatRepository.save(userMessage).subscribe();
     }
 
@@ -70,8 +70,17 @@ public class ChatController {
         systemMessage.setMessage(((OAuth2User) success.getAuthentication().getPrincipal()).getAttribute(USER_EMAIL_ATTRIBUTE));
         systemMessage.setTimeStamp(System.currentTimeMillis());
         chatSink.tryEmitNext(systemMessage);
-        checkDeleteRecords();
+        chatRepository.save(systemMessage).subscribe();
+    }
 
+    @Scheduled(fixedRate = 40000)
+    public void periodicalSystemKeepAliveMessage() {
+        ChatMessage systemMessage = new ChatMessage();
+        systemMessage.setSender("System");
+        systemMessage.setMessage("");
+        systemMessage.setTimeStamp(System.currentTimeMillis());
+        chatSink.tryEmitNext(systemMessage);
+        checkDeleteRecords();
     }
 
     private void checkDeleteRecords() {
