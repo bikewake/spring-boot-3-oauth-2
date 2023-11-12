@@ -16,7 +16,7 @@ $(document).ready(function () {
         $('#message').val('');
     });
 
-    const eventSource = new EventSource('/chat');
+    const eventSource = new EventSource('/sse-chat');
     eventSource.onmessage = function (event) {
         if (event.data) {
             const data = JSON.parse(event.data);

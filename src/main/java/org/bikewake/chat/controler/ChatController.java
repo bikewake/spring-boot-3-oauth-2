@@ -3,6 +3,8 @@ package org.bikewake.chat.controler;
 import org.bikewake.chat.model.ChatMessage;
 import org.bikewake.chat.model.PostMessage;
 import org.bikewake.chat.repository.ChatRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
@@ -20,6 +22,7 @@ import reactor.core.publisher.Sinks;
 
 @RestController
 public class ChatController {
+    private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
 
     private final static String USER_NAME_ATTRIBUTE = "name";
     private final static String USER_EMAIL_ATTRIBUTE = "email";
@@ -33,7 +36,7 @@ public class ChatController {
         this.chatSink = chatSink;
     }
 
-    @GetMapping(path = "/chat", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(path = "/sse-chat", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ServerSentEvent<ChatMessage>> chatMessages() {
         return chatSink.asFlux().map(message -> ServerSentEvent.builder(message).build());
     }
@@ -60,6 +63,8 @@ public class ChatController {
         systemMessage.setTimeStamp(System.currentTimeMillis());
 
         chatRepository.save(systemMessage).subscribe();
+        logger.debug("System Chat Started");
+        chatSink.asFlux().subscribe();
     }
 
     @EventListener
@@ -81,6 +86,7 @@ public class ChatController {
         systemMessage.setTimeStamp(System.currentTimeMillis());
         chatSink.tryEmitNext(systemMessage);
         checkDeleteRecords();
+        logger.debug("Number of chat sink subscriber {}" , chatSink.currentSubscriberCount());
     }
 
     private void checkDeleteRecords() {
