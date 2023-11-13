@@ -13,11 +13,14 @@
     <link th:href="@{/styles/app.css}" rel="stylesheet" type="text/css"  />
  </head>
 
-<body class="d-flex flex-column min-vh-100">
+<body>
 <header>
     <nav class="navbar navbar-light bg-light ps-5">
         <span class="navbar-brand mb-0 h1">Passenger</span>
-        <a class="navbar-brand" href="/logout">Logout</a>
+        <a class="navbar-brand" href="javascript: document.logoutForm.submit()" role="menuitem"> Logout</a>
+        <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+            <input hidden type="submit" value="Sign Out"/>
+        </form>
     </nav>
 </header>
 <main>

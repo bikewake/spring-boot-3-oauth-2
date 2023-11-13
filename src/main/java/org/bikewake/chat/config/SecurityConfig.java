@@ -18,13 +18,13 @@ public class SecurityConfig {
 //                .csrf(cs-> cs.disable())
                 .oauth2Client(Customizer.withDefaults())
                 .oauth2Login(Customizer.withDefaults())
-                .logout( lo -> lo.logoutSuccessUrl("https://buben.bikewake.org/realms/chat/protocol/openid-connect/logout"))
+                .logout(lo -> lo.logoutSuccessUrl("https://buben.bikewake.org/realms/chat/protocol/openid-connect/logout"))
         ;
 
         http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers( "/oauth2/**", "/login/**").permitAll()
-                        .anyRequest().fullyAuthenticated()
-                );
+                .requestMatchers("/oauth2/**", "/login/**").permitAll()
+                .anyRequest().fullyAuthenticated()
+        );
 
         return http.build();
     }

@@ -12,8 +12,21 @@ $(document).ready(function () {
         e.preventDefault();
 
         const message = $('#message').val();
-        $.post('/chat', { message});
-        $('#message').val('');
+        $.post('/chat', { message })
+            .done(function(data, status, xhr) {
+                // Success (2xx response)
+                console.log('2xx:', xhr.status, status, data);
+                if(!data) {
+                    $('#message').val('');
+                } else {
+                    alert("Session Expired, Refresh Page or Login again.");
+                }
+            })
+            .fail(function(xhr, status, error) {
+                // Failure (non-2xx response)
+                console.error('Error:', status, error);
+                alert("Session Expired, Refresh Page or Login again.");
+            });
     });
 
     const eventSource = new EventSource('/sse-chat');
