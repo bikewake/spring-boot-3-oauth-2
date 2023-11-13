@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.HtmlUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 
@@ -47,8 +48,8 @@ public class ChatController {
 
         OAuth2User user = ((OAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         ChatMessage userMessage = new ChatMessage();
-        userMessage.setSender(user.getAttribute(USER_NAME_ATTRIBUTE));
-        userMessage.setMessage(message.getMessage());
+        userMessage.setSender(HtmlUtils.htmlEscape(user.getAttribute(USER_NAME_ATTRIBUTE)));
+        userMessage.setMessage(HtmlUtils.htmlEscape(message.getMessage()));
         userMessage.setTimeStamp(System.currentTimeMillis());
 
         chatSink.tryEmitNext(userMessage);
@@ -71,14 +72,16 @@ public class ChatController {
     public void onSuccess(AuthenticationSuccessEvent success) {
 
         ChatMessage systemMessage = new ChatMessage();
-        systemMessage.setSender(((OAuth2User) success.getAuthentication().getPrincipal()).getAttribute(USER_NAME_ATTRIBUTE));
-        systemMessage.setMessage(((OAuth2User) success.getAuthentication().getPrincipal()).getAttribute(USER_EMAIL_ATTRIBUTE));
+        systemMessage.setSender(HtmlUtils.htmlEscape(((OAuth2User) success.getAuthentication()
+                .getPrincipal()).getAttribute(USER_NAME_ATTRIBUTE)));
+        systemMessage.setMessage(HtmlUtils.htmlEscape(((OAuth2User) success.getAuthentication()
+                .getPrincipal()).getAttribute(USER_EMAIL_ATTRIBUTE)));
         systemMessage.setTimeStamp(System.currentTimeMillis());
         chatSink.tryEmitNext(systemMessage);
         chatRepository.save(systemMessage).subscribe();
     }
 
-    @Scheduled(fixedRateString ="${chat.keep.alive}", initialDelay=10000)
+    @Scheduled(fixedRateString = "${chat.keep.alive}", initialDelay = 10000)
     public void periodicalSystemKeepAliveMessage() {
         ChatMessage systemMessage = new ChatMessage();
         systemMessage.setSender("System");
@@ -86,13 +89,13 @@ public class ChatController {
         systemMessage.setTimeStamp(System.currentTimeMillis());
         chatSink.tryEmitNext(systemMessage);
         checkDeleteRecords();
-        logger.debug("Number of chat sink subscriber {}" , chatSink.currentSubscriberCount());
+        logger.debug("Number of chat sink subscriber {}", chatSink.currentSubscriberCount());
     }
 
     private void checkDeleteRecords() {
         chatRepository.count().subscribe(
                 allRecordsCount -> {
-                    if(allRecordsCount > NUMBER_OF_DATABASE_RECORDS) {
+                    if (allRecordsCount > NUMBER_OF_DATABASE_RECORDS) {
                         chatRepository.deleteOldRecords(allRecordsCount - NUMBER_OF_DATABASE_RECORDS).subscribe();
                     }
                 }

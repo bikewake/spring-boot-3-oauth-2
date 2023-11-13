@@ -13,7 +13,7 @@ COPY target/chat-0.0.1-SNAPSHOT.jar /app/app.jar
 VOLUME /app/config
 
 # Set the environment variable for the exposed port
-ENV PORT 8090
+ENV PORT 9090
 
 # Expose the port that your Spring Boot app will run on
 EXPOSE $PORT
