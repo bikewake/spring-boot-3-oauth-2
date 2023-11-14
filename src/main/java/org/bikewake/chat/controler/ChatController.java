@@ -1,5 +1,6 @@
 package org.bikewake.chat.controler;
 
+import io.netty.util.CharsetUtil;
 import org.bikewake.chat.model.ChatMessage;
 import org.bikewake.chat.model.PostMessage;
 import org.bikewake.chat.repository.ChatRepository;
@@ -48,8 +49,8 @@ public class ChatController {
 
         OAuth2User user = ((OAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         ChatMessage userMessage = new ChatMessage();
-        userMessage.setSender(HtmlUtils.htmlEscape(user.getAttribute(USER_NAME_ATTRIBUTE)));
-        userMessage.setMessage(HtmlUtils.htmlEscape(message.getMessage()));
+        userMessage.setSender(HtmlUtils.htmlEscape(user.getAttribute(USER_NAME_ATTRIBUTE), CharsetUtil.UTF_8.displayName()));
+        userMessage.setMessage(HtmlUtils.htmlEscape(message.getMessage(), CharsetUtil.UTF_8.displayName()));
         userMessage.setTimeStamp(System.currentTimeMillis());
 
         chatSink.tryEmitNext(userMessage);
@@ -73,9 +74,9 @@ public class ChatController {
 
         ChatMessage systemMessage = new ChatMessage();
         systemMessage.setSender(HtmlUtils.htmlEscape(((OAuth2User) success.getAuthentication()
-                .getPrincipal()).getAttribute(USER_NAME_ATTRIBUTE)));
+                .getPrincipal()).getAttribute(USER_NAME_ATTRIBUTE), CharsetUtil.UTF_8.displayName()));
         systemMessage.setMessage(HtmlUtils.htmlEscape(((OAuth2User) success.getAuthentication()
-                .getPrincipal()).getAttribute(USER_EMAIL_ATTRIBUTE)));
+                .getPrincipal()).getAttribute(USER_EMAIL_ATTRIBUTE), CharsetUtil.UTF_8.displayName()));
         systemMessage.setTimeStamp(System.currentTimeMillis());
         chatSink.tryEmitNext(systemMessage);
         chatRepository.save(systemMessage).subscribe();
