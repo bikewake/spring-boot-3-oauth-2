@@ -53,8 +53,13 @@ public class ChatController {
         userMessage.setMessage(HtmlUtils.htmlEscape(message.getMessage(), CharsetUtil.UTF_8.displayName()));
         userMessage.setTimeStamp(System.currentTimeMillis());
 
+        ChatMessage dbMessage = new ChatMessage();
+        dbMessage.setSender(user.getAttribute(USER_NAME_ATTRIBUTE));
+        dbMessage.setMessage(message.getMessage());
+        dbMessage.setTimeStamp(userMessage.getTimeStamp());
+
         chatSink.tryEmitNext(userMessage);
-        chatRepository.save(userMessage).subscribe();
+        chatRepository.save(dbMessage).subscribe();
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -72,14 +77,21 @@ public class ChatController {
     @EventListener
     public void onSuccess(AuthenticationSuccessEvent success) {
 
+        String userName = ((OAuth2User) success.getAuthentication().getPrincipal()).getAttribute(USER_NAME_ATTRIBUTE);
+        String userEmail = ((OAuth2User) success.getAuthentication().getPrincipal()).getAttribute(USER_EMAIL_ATTRIBUTE);
+
         ChatMessage systemMessage = new ChatMessage();
-        systemMessage.setSender(HtmlUtils.htmlEscape(((OAuth2User) success.getAuthentication()
-                .getPrincipal()).getAttribute(USER_NAME_ATTRIBUTE), CharsetUtil.UTF_8.displayName()));
-        systemMessage.setMessage(HtmlUtils.htmlEscape(((OAuth2User) success.getAuthentication()
-                .getPrincipal()).getAttribute(USER_EMAIL_ATTRIBUTE), CharsetUtil.UTF_8.displayName()));
+        systemMessage.setSender(HtmlUtils.htmlEscape(userName, CharsetUtil.UTF_8.displayName()));
+        systemMessage.setMessage(HtmlUtils.htmlEscape(userEmail, CharsetUtil.UTF_8.displayName()));
         systemMessage.setTimeStamp(System.currentTimeMillis());
+
+        ChatMessage dbMessage = new ChatMessage();
+        dbMessage.setSender(userName);
+        dbMessage.setMessage(userEmail);
+        dbMessage.setTimeStamp(systemMessage.getTimeStamp());
+
         chatSink.tryEmitNext(systemMessage);
-        chatRepository.save(systemMessage).subscribe();
+        chatRepository.save(dbMessage).subscribe();
     }
 
     @Scheduled(fixedRateString = "${chat.keep.alive}", initialDelay = 10000)
